@@ -32,13 +32,13 @@ Create a specialized VM solution that can:
 3. Run the configuration wizard:
 
    ```bash
-   ./bin/vm-config-wizard
+   ./bin/vm-config-wizard.py
    ```
 
 4. Make the CLI executable:
 
    ```bash
-   chmod +x bin/time-shift-cli
+   chmod +x bin/time-shift-cli.py
    ```
 
 ## Usage
@@ -46,25 +46,25 @@ Create a specialized VM solution that can:
 ### Basic Time Shift Operation
 
 ```bash
-./bin/time-shift-cli --target-date 2020-01-01 --idrac-ip 192.168.1.100
+./bin/time-shift-cli.py --target-date 2020-01-01 --idrac-ip 192.168.1.100
 ```
 
 ### Restore Original Time
 
 ```bash
-./bin/time-shift-cli --action restore
+./bin/time-shift-cli.py --action restore
 ```
 
 ### Validate iDRAC Connectivity
 
 ```bash
-./bin/time-shift-cli --action validate --idrac-ip 192.168.1.100
+./bin/time-shift-cli.py --action validate --idrac-ip 192.168.1.100
 ```
 
 ### Using Custom Configuration
 
 ```bash
-./bin/time-shift-cli --config /path/to/custom-config.json --action shift --target-date 2019-06-15
+./bin/time-shift-cli.py --config /path/to/custom-config.json --action shift --target-date 2019-06-15
 ```
 
 ## Configuration
@@ -83,8 +83,8 @@ The main configuration file is located at `etc/time-shift-config.json`. Key sect
 ```text
 time-shift-proxmox/
 ├── bin/
-│   ├── time-shift-cli           # Main CLI interface
-│   └── vm-config-wizard         # Initial setup wizard
+│   ├── time-shift-cli.py        # Main CLI interface
+│   └── vm-config-wizard.py      # Initial setup wizard
 ├── etc/
 │   └── time-shift-config.json   # Primary configuration
 ├── lib/
@@ -138,16 +138,16 @@ time-shift-proxmox/
 
 ```bash
 # 1. Configure the system
-./bin/vm-config-wizard
+./bin/vm-config-wizard.py
 
 # 2. Shift time to access expired iDRAC certificate
-./bin/time-shift-cli --target-date 2020-01-01 --idrac-ip 192.168.1.100
+./bin/time-shift-cli.py --target-date 2020-01-01 --idrac-ip 192.168.1.100
 
 # 3. Access iDRAC interface (certificate now appears valid)
 # ... perform required iDRAC operations ...
 
 # 4. Restore original time
-./bin/time-shift-cli --action restore
+./bin/time-shift-cli.py --action restore
 ```
 
 ### Batch Operations
@@ -155,7 +155,7 @@ time-shift-proxmox/
 ```bash
 # Validate multiple iDRAC interfaces
 for ip in 192.168.1.100 192.168.1.101 192.168.1.102; do
-    ./bin/time-shift-cli --action validate --idrac-ip $ip
+    ./bin/time-shift-cli.py --action validate --idrac-ip $ip
 done
 ```
 

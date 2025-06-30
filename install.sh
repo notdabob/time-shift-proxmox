@@ -50,7 +50,7 @@ Version=1.0
 Type=Application
 Name=Time-Shift VM
 Comment=Access iDRAC with expired certificates
-Exec=$(pwd)/bin/time-shift-cli
+Exec=$(pwd)/bin/time-shift-cli.py
 Icon=utilities-terminal
 Terminal=true
 Categories=System;
@@ -59,8 +59,8 @@ EOF
 echo "Installation complete!"
 echo
 echo "Next steps:"
-echo "1. Run the configuration wizard: ./bin/vm-config-wizard"
+echo "1. Run the configuration wizard: ./bin/vm-config-wizard.py"
 echo "2. Edit etc/time-shift-config.json as needed"
-echo "3. Test with: ./bin/time-shift-cli --action validate --idrac-ip <your-idrac-ip>"
+echo "3. Test with: ./bin/time-shift-cli.py --action validate --idrac-ip <your-idrac-ip>"
 echo
-echo "For help: ./bin/time-shift-cli --help"
+echo "For help: ./bin/time-shift-cli.py --help"

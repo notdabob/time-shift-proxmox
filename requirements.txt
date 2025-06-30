@@ -1,2 +1,7 @@
 requests>=2.28.0
 urllib3>=1.26.0
+python-dotenv
+google-generativeai
+anthropic
+openai
+groq
