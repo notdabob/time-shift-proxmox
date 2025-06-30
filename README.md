@@ -177,6 +177,49 @@ API_KEY_NAME=your_api_key_here
 
 This prevents security warnings while maintaining proper secret management practices.
 
+## Project Source
+
+This project was conceptualized and developed based on discussions in a Perplexity AI conversation. The original conversation provided valuable insights into:
+
+- Project architecture and structure
+- AI provider integration patterns
+- Python development best practices
+- Security considerations for API key management
+
+**Source:** [Perplexity AI Conversation](https://www.perplexity.ai/search/5ded1777-135b-4451-b18c-2db3f31da780)
+
+For detailed information about the original conversation and key discussion points, see:
+[docs/PERPLEXITY_CONVERSATION.md](docs/PERPLEXITY_CONVERSATION.md)
+
+## VS Code Extensions
+
+The following VS Code extensions can enhance your development experience with this project:
+
+### Perplexity AI Integration
+
+```vscode-extensions
+ghutu.perplexity-ext,kwesinavilot.reprompt
+```
+
+### AI Coding Assistants
+
+```vscode-extensions
+shahabbahreinijangjoo.ai-commit-assistant,danielsanmedium.dscodegpt,continue.continue
+```
+
+### Themes
+
+```vscode-extensions
+cottonable.perplexity
+```
+
+## Documentation
+
+- [`docs/PERPLEXITY_CONVERSATION.md`](docs/PERPLEXITY_CONVERSATION.md) - Original conversation source
+- [`GEMINI.md`](GEMINI.md) - Gemini AI integration details
+- [`.env`](.env) - Environment variables template
+- [`requirements.txt`](requirements.txt) - Python dependencies
+
 ## License
 
 This project is provided as-is for educational and operational purposes. Use responsibly and in accordance with your organization's security policies.
