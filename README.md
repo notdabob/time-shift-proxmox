@@ -26,7 +26,11 @@ Create a specialized VM solution that can:
 2. Install required Python dependencies:
 
    ```bash
-   pip install -r requirements.txt
+   # On macOS/Linux with Homebrew Python:
+   pip3 install -r requirements.txt
+
+   # Alternative if pip3 not found:
+   python3 -m pip install -r requirements.txt
    ```
 
 3. Run the configuration wizard:
