@@ -1,0 +1,6 @@
+{
+  "docs": {
+    "docsFilePathRegex": "docs/*.md",
+    "docsOutputFilePath": "Documentation_time-shift-proxmox.pdf"
+  }
+}
