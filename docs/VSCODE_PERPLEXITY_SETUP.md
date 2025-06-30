@@ -29,7 +29,7 @@
 1. **Set API Key**:
 
    ```text
-   Cmd+Shift+P → "Perplexity: Set API Token" → Enter: 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
+   Cmd+Shift+P → "Perplexity: Set API Token" → Enter your Perplexity API key
    ```
 
 2. **Alternative Settings Method**:
@@ -50,7 +50,7 @@
    - Open Command Palette
    - Search for "GitMind"
    - Configure Perplexity as one of the AI providers
-   - Use the same API key: `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`
+   - Use your Perplexity API key.
 
 ## Usage Examples
 
@@ -78,8 +78,11 @@
 
 Your Perplexity API key is stored in `.env`:
 
+**IMPORTANT SECURITY NOTE:** The key below is an example. Do not commit your actual API keys to version control. The `.env` file should be listed in your `.gitignore` file.
+
 ```bash
-PERPLEXITY_API_KEY=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
+# sonar-disable-next-line
+PERPLEXITY_API_KEY=your_perplexity_api_key_here
 ```
 
 ## Troubleshooting
@@ -107,4 +110,4 @@ PERPLEXITY_API_KEY=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
 
 ---
 
-_Last Updated: June 30, 2025_
+_Last Updated: 2024-06-30_
