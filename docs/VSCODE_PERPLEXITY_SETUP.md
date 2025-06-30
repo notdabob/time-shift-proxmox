@@ -30,6 +30,9 @@
 
    ```text
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8b451a0 (docs: Add Perplexity PDF documentation and update VS Code setup)
    Cmd+Shift+P → "Perplexity: Set API Token" → Enter your Perplexity API key
    ```
 
@@ -52,6 +55,9 @@
    - Search for "GitMind"
    - Configure Perplexity as one of the AI providers
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8b451a0 (docs: Add Perplexity PDF documentation and update VS Code setup)
    - Use your Perplexity API key.
 
 ## Usage Examples
@@ -112,4 +118,4 @@ PERPLEXITY_API_KEY=your_perplexity_api_key_here
 
 ---
 
-_Last Updated: June 30, 2025_
+_Last Updated: 2024-06-30_
