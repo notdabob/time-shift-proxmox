@@ -65,4 +65,5 @@ The conversation provided valuable insights into:
 - [Original Conversation Link](https://www.perplexity.ai/search/5ded1777-135b-4451-b18c-2db3f31da780)
 
 ---
-*Note: To access the full conversation content, authentication with Perplexity AI is required.*
+
+_Note: To access the full conversation content, authentication with Perplexity AI is required._
