@@ -29,6 +29,7 @@
 1. **Set API Key**:
 
    ```text
+<<<<<<< HEAD
    Cmd+Shift+P → "Perplexity: Set API Token" → Enter your Perplexity API key
    ```
 
@@ -50,6 +51,7 @@
    - Open Command Palette
    - Search for "GitMind"
    - Configure Perplexity as one of the AI providers
+<<<<<<< HEAD
    - Use your Perplexity API key.
 
 ## Usage Examples
@@ -110,4 +112,4 @@ PERPLEXITY_API_KEY=your_perplexity_api_key_here
 
 ---
 
-_Last Updated: 2024-06-30_
+_Last Updated: June 30, 2025_
