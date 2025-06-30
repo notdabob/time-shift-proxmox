@@ -1,7 +1,15 @@
 {
   "approved_commands": {
     "git": {
-      "allowed_subcommands": ["status", "add", "commit", "push", "pull", "log", "diff"],
+      "allowed_subcommands": [
+        "status",
+        "add",
+        "commit",
+        "push",
+        "pull",
+        "log",
+        "diff"
+      ],
       "auto_approve": true
     },
     "ls": {
@@ -22,12 +30,5 @@
       "auto_approve": true
     }
   },
-  "forbidden_commands": [
-    "rm -rf",
-    "sudo",
-    "su",
-    "dd",
-    "mkfs",
-    "fdisk"
-  ]
+  "forbidden_commands": ["rm -rf", "sudo", "su", "dd", "mkfs", "fdisk"]
 }
