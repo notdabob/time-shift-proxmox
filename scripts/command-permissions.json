@@ -1,0 +1,33 @@
+{
+  "approved_commands": {
+    "git": {
+      "allowed_subcommands": ["status", "add", "commit", "push", "pull", "log", "diff"],
+      "auto_approve": true
+    },
+    "ls": {
+      "allowed_flags": ["-la", "-l", "-a", ""],
+      "auto_approve": true
+    },
+    "chmod": {
+      "allowed_patterns": ["\\+x .*", "755 .*", "644 .*"],
+      "auto_approve": true
+    },
+    "pip": {
+      "allowed_subcommands": ["install", "list", "show"],
+      "auto_approve": false,
+      "require_confirmation": true
+    },
+    "python": {
+      "allowed_flags": ["--version", "-V"],
+      "auto_approve": true
+    }
+  },
+  "forbidden_commands": [
+    "rm -rf",
+    "sudo",
+    "su",
+    "dd",
+    "mkfs",
+    "fdisk"
+  ]
+}

@@ -5,6 +5,7 @@ A Debian-based VM template for Proxmox that can temporarily shift system time to
 ## Project Goal
 
 Create a specialized VM solution that can:
+
 - Temporarily modify system time to access systems with expired SSL certificates
 - Specifically target Dell iDRAC interfaces that often have expired certificates
 - Provide automated time restoration after operations
@@ -23,16 +24,19 @@ Create a specialized VM solution that can:
 
 1. Clone this repository to your Proxmox host or management system
 2. Install required Python dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. Run the configuration wizard:
+
    ```bash
    ./bin/vm-config-wizard
    ```
 
 4. Make the CLI executable:
+
    ```bash
    chmod +x bin/time-shift-cli
    ```
@@ -40,21 +44,25 @@ Create a specialized VM solution that can:
 ## Usage
 
 ### Basic Time Shift Operation
+
 ```bash
 ./bin/time-shift-cli --target-date 2020-01-01 --idrac-ip 192.168.1.100
 ```
 
 ### Restore Original Time
+
 ```bash
 ./bin/time-shift-cli --action restore
 ```
 
 ### Validate iDRAC Connectivity
+
 ```bash
 ./bin/time-shift-cli --action validate --idrac-ip 192.168.1.100
 ```
 
 ### Using Custom Configuration
+
 ```bash
 ./bin/time-shift-cli --config /path/to/custom-config.json --action shift --target-date 2019-06-15
 ```
@@ -72,7 +80,7 @@ The main configuration file is located at `etc/time-shift-config.json`. Key sect
 
 ## File Structure
 
-```
+```text
 time-shift-proxmox/
 ├── bin/
 │   ├── time-shift-cli           # Main CLI interface
@@ -127,6 +135,7 @@ time-shift-proxmox/
 ## Examples
 
 ### Complete Workflow
+
 ```bash
 # 1. Configure the system
 ./bin/vm-config-wizard
@@ -142,6 +151,7 @@ time-shift-proxmox/
 ```
 
 ### Batch Operations
+
 ```bash
 # Validate multiple iDRAC interfaces
 for ip in 192.168.1.100 192.168.1.101 192.168.1.102; do
