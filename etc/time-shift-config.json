@@ -1,0 +1,44 @@
+{
+  "proxmox": {
+    "host": "192.168.1.100",
+    "port": 8006,
+    "username": "root@pam",
+    "password": "your_proxmox_password",
+    "node": "proxmox-node",
+    "verify_ssl": false
+  },
+  "vm": {
+    "name": "time-shift-vm",
+    "memory": 2048,
+    "cores": 2,
+    "disk_size": 20,
+    "os_type": "l26",
+    "template": "debian-12-standard"
+  },
+  "network": {
+    "bridge": "vmbr0",
+    "ip_config": "dhcp"
+  },
+  "time": {
+    "timezone": "UTC",
+    "ntp_servers": ["pool.ntp.org", "time.nist.gov"],
+    "backup_original": true
+  },
+  "idrac": {
+    "default_username": "root",
+    "default_password": "calvin",
+    "ssl_verify": false,
+    "timeout": 30
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "/var/logs/time-shift.log",
+    "max_size": "10MB",
+    "backup_count": 5
+  },
+  "security": {
+    "encrypt_passwords": false,
+    "allow_root": true,
+    "require_confirmation": true
+  }
+}
