@@ -22,83 +22,32 @@ Create a specialized VM solution that can:
 
 ## Installation
 
-1. Clone this repository to your Proxmox host or management system
-2. Install required Python dependencies:
+1. Clone the repository:
 
    ```bash
-   # On macOS/Linux with Homebrew Python:
-   pip3 install -r requirements.txt
-
-   # Alternative if pip3 not found:
-   python3 -m pip install -r requirements.txt
+   git clone https://github.com/your-repo/time-shift-proxmox.git
+   cd time-shift-proxmox
    ```
 
-3. Run the configuration wizard:
+2. Setup project requirements and make scripts executable:
 
    ```bash
-   ./bin/vm-config-wizard.py
-   ```
-
-4. Make the CLI executable:
-
-   ```bash
-   chmod +x bin/time-shift-cli.py
+   chmod +x bin/*.py && ./bin/setup-project-requirements.py
    ```
 
 ## Usage
 
-### Basic Time Shift Operation
+After installation, you can use the following scripts:
 
-```bash
-./bin/time-shift-cli.py --target-date 2020-01-01 --idrac-ip 192.168.1.100
-```
+- **Configuration Wizard**: `./bin/vm-config-wizard.py`
+- **Time-Shift CLI**: `./bin/time-shift-cli.py`
 
-### Restore Original Time
-
-```bash
-./bin/time-shift-cli.py --action restore
-```
-
-### Validate iDRAC Connectivity
-
-```bash
-./bin/time-shift-cli.py --action validate --idrac-ip 192.168.1.100
-```
-
-### Using Custom Configuration
-
-```bash
-./bin/time-shift-cli.py --config /path/to/custom-config.json --action shift --target-date 2019-06-15
-```
+Refer to the respective script's `--help` for usage details.
 
 ## Configuration
 
-The main configuration file is located at `etc/time-shift-config.json`. Key sections include:
-
-- **Proxmox**: Connection details for Proxmox VE API
-- **VM**: Virtual machine specifications and settings
-- **Network**: Network configuration for the VM
-- **Time**: Timezone and NTP server settings
-- **iDRAC**: Default credentials and connection parameters
-- **Logging**: Log file locations and verbosity levels
-
-## File Structure
-
-```text
-time-shift-proxmox/
-├── bin/
-│   ├── time-shift-cli.py        # Main CLI interface
-│   └── vm-config-wizard.py      # Initial setup wizard
-├── etc/
-│   └── time-shift-config.json   # Primary configuration
-├── lib/
-│   ├── proxmox_api.py          # Proxmox API interactions
-│   ├── time_ops.py             # Time manipulation functions
-│   └── network_tools.py        # Network validation
-├── var/
-│   └── logs/                   # Log directory
-└── usr/local/share/time-shift/ # Desktop shortcuts/bookmarks
-```
+The main configuration file for the VM solution is located at `etc/time-shift-config.json`.
+Project-specific configurations are in `etc/project_config.json`.
 
 ## Requirements
 
@@ -108,110 +57,13 @@ time-shift-proxmox/
 - Root access for time manipulation
 - Network connectivity to target iDRAC interfaces
 
-## Python Dependencies
-
-- `requests` - HTTP client for API calls
-- `urllib3` - HTTP library with SSL handling
-- Standard library modules: `json`, `datetime`, `subprocess`, `socket`, `ssl`
-
 ## Security Considerations
 
-- This tool requires root privileges to modify system time
-- SSL verification is disabled when connecting to systems with expired certificates
-- Passwords in configuration files should be properly secured
-- Time manipulation affects the entire system - use with caution
-- Always test in isolated environments first
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Permission Denied**: Ensure the script has root privileges for time operations
-2. **Network Connectivity**: Verify network access to target iDRAC interfaces
-3. **Proxmox API Errors**: Check Proxmox credentials and API accessibility
-4. **Time Restoration Failed**: Manual restoration may be required - check logs
-
-### Log Files
-
-- Main log: `/var/logs/time-shift.log`
-- Detailed error information available with `--verbose` flag
-
-## Examples
-
-### Complete Workflow
-
-```bash
-# 1. Configure the system
-./bin/vm-config-wizard.py
-
-# 2. Shift time to access expired iDRAC certificate
-./bin/time-shift-cli.py --target-date 2020-01-01 --idrac-ip 192.168.1.100
-
-# 3. Access iDRAC interface (certificate now appears valid)
-# ... perform required iDRAC operations ...
-
-# 4. Restore original time
-./bin/time-shift-cli.py --action restore
-```
-
-### Batch Operations
-
-```bash
-# Validate multiple iDRAC interfaces
-for ip in 192.168.1.100 192.168.1.101 192.168.1.102; do
-    ./bin/time-shift-cli.py --action validate --idrac-ip $ip
-done
-```
-
-## Development Guidelines
-
-### API Key Management
-
-When adding new API keys to `.env` files, always include SonarQube disable comments:
-
-```bash
-# Service Name API Key
-# sonar-disable-next-line
-API_KEY_NAME=your_api_key_here
-```
-
-This prevents security warnings while maintaining proper secret management practices.
-
-## Project Source
-
-This project was conceptualized and developed based on discussions in a Perplexity AI conversation. The original conversation provided valuable insights into:
-
-- Project architecture and structure
-- AI provider integration patterns
-- Python development best practices
-- Security considerations for API key management
-
-**Source:** [Perplexity AI Conversation](https://www.perplexity.ai/search/5ded1777-135b-4451-b18c-2db3f31da780)
-
-For detailed information about the original conversation and key discussion points, see:
-[docs/PERPLEXITY_CONVERSATION.md](docs/PERPLEXITY_CONVERSATION.md)
-
-## VS Code Extensions
-
-The following VS Code extensions can enhance your development experience with this project:
-
-### Perplexity AI Integration
-
-```vscode-extensions
-ghutu.perplexity-ext,kwesinavilot.reprompt
-```
-
-### AI Coding Assistants
-
-```vscode-extensions
-shahabbahreinijangjoo.ai-commit-assistant,danielsanmedium.dscodegpt,continue.continue
-```
-
-### Themes
-
-```vscode-extensions
-cottonable.perplexity
-```
+- This tool requires root privileges to modify system time.
+- SSL verification is disabled when connecting to systems with expired certificates.
+- Passwords in configuration files should be properly secured.
+- Time manipulation affects the entire system - use with caution.
+- Always test in isolated environments first.
 
 ## Documentation
 
