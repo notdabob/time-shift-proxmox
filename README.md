@@ -159,6 +159,20 @@ for ip in 192.168.1.100 192.168.1.101 192.168.1.102; do
 done
 ```
 
+## Development Guidelines
+
+### API Key Management
+
+When adding new API keys to `.env` files, always include SonarQube disable comments:
+
+```bash
+# Service Name API Key
+# sonar-disable-next-line
+API_KEY_NAME=your_api_key_here
+```
+
+This prevents security warnings while maintaining proper secret management practices.
+
 ## License
 
 This project is provided as-is for educational and operational purposes. Use responsibly and in accordance with your organization's security policies.
