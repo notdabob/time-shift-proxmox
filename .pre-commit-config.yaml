@@ -1,0 +1,182 @@
+# Pre-commit hooks configuration for Time-Shift Proxmox
+# See https://pre-commit.com for more information
+
+repos:
+  # Code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+      - id: black
+        language_version: python3
+        args: [--line-length=88]
+
+  # Import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=88]
+
+  # Code linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        additional_dependencies: [flake8-docstrings, flake8-bugbear]
+        args: [--max-line-length=88, --ignore=E203,W503,D100,D104]
+
+  # Type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-requests, types-python-dateutil]
+        args: [--strict, --ignore-missing-imports]
+
+  # Security scanning
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-r, ., -f, json, -o, /tmp/bandit-report.json]
+        exclude: ^tests/
+
+  # Dependency vulnerability scanning
+  - repo: https://github.com/pyupio/safety
+    rev: 2.3.5
+    hooks:
+      - id: safety
+        args: [--json, --output, /tmp/safety-report.json]
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      # File format checks
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      
+      # Code quality checks
+      - id: check-ast
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: check-builtin-literals
+      
+      # Security checks
+      - id: detect-private-key
+      - id: check-merge-conflict
+      
+      # File size and format
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.5
+    hooks:
+      - id: shellcheck
+        args: [-e, SC1091, -e, SC2155]
+
+  # Dockerfile linting
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint
+        args: [--ignore, DL3008, --ignore, DL3009]
+
+  # Documentation checks
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        args: [--convention=google, --add-ignore=D100,D104,D105,D107]
+
+  # YAML formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.3
+    hooks:
+      - id: prettier
+        types: [yaml, markdown, json]
+        exclude: ^(CHANGELOG\.md|.*\.min\.(js|css))$
+
+  # Python upgrade suggestions
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.15.0
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+
+  # Additional Python checks
+  - repo: https://github.com/pycqa/autoflake
+    rev: v2.2.1
+    hooks:
+      - id: autoflake
+        args: [--remove-all-unused-imports, --remove-unused-variables, --in-place]
+
+  # Commit message format
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: 3.10.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+# Custom local hooks
+  - repo: local
+    hooks:
+      # Custom security check for hardcoded credentials
+      - id: check-credentials
+        name: Check for hardcoded credentials
+        entry: python3 scripts/check_credentials.py
+        language: system
+        files: \.(py|json|yaml|yml|sh)$
+        
+      # Custom configuration validation
+      - id: validate-config
+        name: Validate configuration files
+        entry: python3 -c "
+import json, sys
+from pathlib import Path
+from lib.config_models import TimeShiftConfig
+
+for config_file in Path('etc').glob('*.json'):
+    try:
+        with open(config_file) as f:
+            data = json.load(f)
+        if 'proxmox' in data:
+            TimeShiftConfig(**data)
+        print(f'✅ {config_file} is valid')
+    except Exception as e:
+        print(f'❌ {config_file} validation failed: {e}')
+        sys.exit(1)
+"
+        language: system
+        files: ^etc/.*\.json$
+        pass_filenames: false
+
+      # Test coverage check
+      - id: test-coverage
+        name: Check test coverage
+        entry: python3 -m pytest --cov=lib --cov=bin --cov-fail-under=80 --cov-report=term-missing
+        language: system
+        files: \.(py)$
+        pass_filenames: false
+        stages: [push]
+
+# Configuration for specific tools
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [test-coverage]  # Skip expensive tests in CI
+  submodules: false
