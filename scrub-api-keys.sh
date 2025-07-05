@@ -7,11 +7,6 @@ echo "🔥 CRITICAL: Scrubbing API keys from git history..."
 
 # List of API keys to remove
 API_KEYS=(
-    "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"
-    "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"
-    "AIzaSyASYlIp9cnVKYWfTKYqRK_tlbBoYpFZnEM"
-    "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"
-    "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"
 )
 
 # Create expressions for git filter-repo
