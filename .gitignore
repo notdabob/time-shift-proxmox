@@ -48,11 +48,13 @@ Thumbs.db
 # Logs
 *.log
 var/logs/*.log
+/tmp/time-shift-setup.log
 
 # Temporary files
 *.tmp
 *.temp
 *.bak
+tmp/
 
 # Config files with sensitive data (if any)
 # etc/time-shift-config.json  # Uncomment if contains sensitive data
@@ -61,3 +63,19 @@ var/logs/*.log
 .coverage
 htmlcov/
 .pytest_cache/
+.tox/
+
+# Security and quality reports
+/tmp/bandit-report.json
+/tmp/safety-report.json
+
+# Example configs (generated during setup)
+example_config.json
+
+# Poetry
+poetry.lock
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
