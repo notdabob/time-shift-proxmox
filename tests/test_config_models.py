@@ -289,7 +289,7 @@ class TestSecurityValidation:
         """Test configuration with security issues"""
         config = create_default_config()
         config.proxmox.password = "password"  # Weak password
-        config.idrac.default_password = "calvin"  # Default password
+        config.idrac.default_password = "calvin"  # Dell standard default
         config.security.allow_root = True
         config.security.encrypt_passwords = False
         

@@ -113,7 +113,15 @@ module = [
     "anthropic.*", 
     "openai.*",
     "groq.*",
-    "keyring.*"
+    "keyring.*",
+    "psutil.*",
+    "structlog.*",
+    "dotenv.*",
+    "aiohttp.*",
+    "asyncio.*",
+    "cryptography.*",
+    "fastapi.*",
+    "uvicorn.*"
 ]
 ignore_missing_imports = true
 

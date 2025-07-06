@@ -393,7 +393,9 @@ class GitPlugin(IntegrationPlugin):
             version="1.0.0",
             author="Time Shift Team",
             description="Git repository management",
-            capabilities=["clone", "pull", "push", "status"],
+            capabilities=["status", "pull", "push", "commit", "add", "branch", 
+                         "checkout", "fetch", "log", "diff", "stash", "merge", 
+                         "reset", "tag", "remote"],
             config_schema={
                 "remote": {"type": "string"},
                 "branch": {"type": "string", "default": "main"},
@@ -410,16 +412,121 @@ class GitPlugin(IntegrationPlugin):
     
     async def execute(self, action: str, **kwargs) -> Any:
         import subprocess
+        import asyncio
+        
+        async def run_git_command(cmd: list) -> dict:
+            """Run a git command asynchronously"""
+            proc = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await proc.communicate()
+            return {
+                "status": "success" if proc.returncode == 0 else "error",
+                "output": stdout.decode(),
+                "error": stderr.decode() if stderr else None,
+                "returncode": proc.returncode
+            }
         
         if action == "status":
-            result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
-            return {"status": "success", "output": result.stdout}
-        elif action == "pull":
-            result = subprocess.run(["git", "pull"], capture_output=True, text=True)
-            return {"status": "success" if result.returncode == 0 else "error", "output": result.stdout}
-        # Add more git operations as needed
+            return await run_git_command(["git", "status", "--porcelain"])
         
-        return {"status": "not_implemented"}
+        elif action == "pull":
+            return await run_git_command(["git", "pull"])
+        
+        elif action == "push":
+            remote = kwargs.get("remote", "origin")
+            branch = kwargs.get("branch", "main")
+            return await run_git_command(["git", "push", remote, branch])
+        
+        elif action == "commit":
+            message = kwargs.get("message", "")
+            if not message:
+                return {"status": "error", "error": "Commit message required"}
+            return await run_git_command(["git", "commit", "-m", message])
+        
+        elif action == "add":
+            files = kwargs.get("files", ["."])
+            if isinstance(files, str):
+                files = [files]
+            return await run_git_command(["git", "add"] + files)
+        
+        elif action == "branch":
+            return await run_git_command(["git", "branch", "-a"])
+        
+        elif action == "checkout":
+            branch = kwargs.get("branch", "")
+            if not branch:
+                return {"status": "error", "error": "Branch name required"}
+            create = kwargs.get("create", False)
+            cmd = ["git", "checkout"]
+            if create:
+                cmd.append("-b")
+            cmd.append(branch)
+            return await run_git_command(cmd)
+        
+        elif action == "fetch":
+            return await run_git_command(["git", "fetch", "--all"])
+        
+        elif action == "log":
+            limit = kwargs.get("limit", 10)
+            return await run_git_command(["git", "log", f"--oneline", f"-n{limit}"])
+        
+        elif action == "diff":
+            staged = kwargs.get("staged", False)
+            cmd = ["git", "diff"]
+            if staged:
+                cmd.append("--staged")
+            return await run_git_command(cmd)
+        
+        elif action == "stash":
+            subaction = kwargs.get("subaction", "save")
+            cmd = ["git", "stash", subaction]
+            if subaction == "save" and "message" in kwargs:
+                cmd.extend(["-m", kwargs["message"]])
+            return await run_git_command(cmd)
+        
+        elif action == "merge":
+            branch = kwargs.get("branch", "")
+            if not branch:
+                return {"status": "error", "error": "Branch name required"}
+            return await run_git_command(["git", "merge", branch])
+        
+        elif action == "reset":
+            mode = kwargs.get("mode", "--mixed")
+            target = kwargs.get("target", "HEAD")
+            return await run_git_command(["git", "reset", mode, target])
+        
+        elif action == "tag":
+            tag_name = kwargs.get("name", "")
+            if not tag_name:
+                return await run_git_command(["git", "tag", "-l"])
+            message = kwargs.get("message", "")
+            cmd = ["git", "tag"]
+            if message:
+                cmd.extend(["-a", tag_name, "-m", message])
+            else:
+                cmd.append(tag_name)
+            return await run_git_command(cmd)
+        
+        elif action == "remote":
+            subaction = kwargs.get("subaction", "list")
+            if subaction == "list":
+                return await run_git_command(["git", "remote", "-v"])
+            elif subaction == "add":
+                name = kwargs.get("name", "")
+                url = kwargs.get("url", "")
+                if not name or not url:
+                    return {"status": "error", "error": "Remote name and URL required"}
+                return await run_git_command(["git", "remote", "add", name, url])
+            elif subaction == "remove":
+                name = kwargs.get("name", "")
+                if not name:
+                    return {"status": "error", "error": "Remote name required"}
+                return await run_git_command(["git", "remote", "remove", name])
+        
+        return {"status": "error", "error": f"Unknown action: {action}"}
 
 
 class MonitoringPlugin(IntegrationPlugin):

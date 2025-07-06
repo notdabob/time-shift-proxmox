@@ -39,6 +39,7 @@
   "security": {
     "encrypt_passwords": false,
     "allow_root": true,
-    "require_confirmation": true
+    "require_confirmation": true,
+    "accept_dell_defaults": true
   }
 }

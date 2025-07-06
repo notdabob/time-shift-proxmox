@@ -61,9 +61,17 @@ Project-specific configurations are in `etc/project_config.json`.
 
 - This tool requires root privileges to modify system time.
 - SSL verification is disabled when connecting to systems with expired certificates.
+- Default iDRAC credentials (root/calvin) are Dell's factory standards and are automatically configured.
 - Passwords in configuration files should be properly secured.
 - Time manipulation affects the entire system - use with caution.
 - Always test in isolated environments first.
+
+### Dell iDRAC Default Credentials
+The project uses Dell's standard factory default credentials:
+- Username: `root`
+- Password: `calvin`
+
+These are the universal defaults for all Dell iDRAC interfaces and are automatically configured in the system.
 
 ## Documentation
 

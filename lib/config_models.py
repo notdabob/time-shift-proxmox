@@ -173,9 +173,16 @@ class TimeConfig(BaseModel):
 
 
 class IDRACConfig(BaseModel):
-    """iDRAC connection configuration"""
-    default_username: str = Field(default="root", description="Default iDRAC username")
-    default_password: str = Field(default="calvin", description="Default iDRAC password")
+    """iDRAC connection configuration
+    
+    Dell iDRAC standard default credentials:
+    - Username: root
+    - Password: calvin
+    
+    These are Dell's factory defaults for all iDRAC interfaces.
+    """
+    default_username: str = Field(default="root", description="Default iDRAC username (Dell standard)")
+    default_password: str = Field(default="calvin", description="Default iDRAC password (Dell standard)")
     ssl_verify: bool = Field(default=False, description="Verify SSL certificates")
     timeout: int = Field(default=30, ge=5, le=120, description="Connection timeout")
     retry_attempts: int = Field(default=3, ge=1, le=10, description="Retry attempts")

@@ -119,7 +119,7 @@ class NetworkValidator:
         Args:
             idrac_ip (str): iDRAC IP address
             username (str): Optional username (default: root)
-            password (str): Optional password (default: calvin)
+            password (str): Optional password (default: calvin - Dell standard)
             
         Returns:
             bool: True if connection successful, False otherwise
