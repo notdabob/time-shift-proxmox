@@ -4,12 +4,21 @@ A Debian-based VM template for Proxmox that can temporarily shift system time to
 
 ## 🚀 Quick Start - One Command Setup
 
-```bash
-# Method 1: Download and run (recommended)
-wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh && sudo bash setup.sh
+### For Private Repository (with GitHub Token)
 
-# Method 2: Using curl
-curl -fsSL https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh -o setup.sh && sudo bash setup.sh
+```bash
+# Save your token once (get it from https://github.com/settings/tokens)
+echo 'YOUR_GITHUB_TOKEN' > ~/.time-shift-proxmox-token && chmod 600 ~/.time-shift-proxmox-token
+
+# Then run setup
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh && sudo bash setup.sh
+```
+
+### Alternative: Pass Token Directly
+
+```bash
+# One-liner with token (replace YOUR_TOKEN)
+sudo GITHUB_TOKEN=YOUR_TOKEN bash -c "$(curl -fsSL https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/quick-setup.sh)"
 ```
 
 This single command will:

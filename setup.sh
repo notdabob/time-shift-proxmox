@@ -19,14 +19,41 @@ fi
 INSTALL_DIR="/opt/time-shift-proxmox"
 echo "📁 Installing to: $INSTALL_DIR"
 
+# Handle repository cloning with authentication
+clone_repository() {
+    # Check if we have a saved token
+    if [ -f "$HOME/.time-shift-proxmox-token" ]; then
+        TOKEN=$(cat "$HOME/.time-shift-proxmox-token")
+        git clone https://notdabob:${TOKEN}@github.com/notdabob/time-shift-proxmox.git "$INSTALL_DIR" 2>/dev/null
+    else
+        # Try public clone first
+        git clone https://github.com/notdabob/time-shift-proxmox.git "$INSTALL_DIR" 2>/dev/null || {
+            echo "⚠️  Repository appears to be private. Please provide authentication."
+            echo ""
+            echo "Run one of these commands first:"
+            echo "1. wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup-github-token.sh && bash setup-github-token.sh"
+            echo "2. echo 'YOUR_GITHUB_TOKEN' > ~/.time-shift-proxmox-token && chmod 600 ~/.time-shift-proxmox-token"
+            echo ""
+            echo "Then run this setup again."
+            exit 1
+        }
+    fi
+}
+
 # Clone repository if not already present
 if [ ! -d "$INSTALL_DIR" ]; then
     echo "📥 Cloning repository..."
-    git clone https://github.com/notdabob/time-shift-proxmox.git "$INSTALL_DIR"
+    clone_repository
 else
     echo "📂 Repository already exists, updating..."
     cd "$INSTALL_DIR"
-    git pull
+    if [ -f "$HOME/.time-shift-proxmox-token" ]; then
+        TOKEN=$(cat "$HOME/.time-shift-proxmox-token")
+        git config credential.helper store
+        git pull https://notdabob:${TOKEN}@github.com/notdabob/time-shift-proxmox.git 2>/dev/null || git pull
+    else
+        git pull
+    fi
 fi
 
 cd "$INSTALL_DIR"
