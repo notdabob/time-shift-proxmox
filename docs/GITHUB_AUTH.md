@@ -1,6 +1,25 @@
 # GitHub Authentication Setup for Private Repository
 
-## Method 0: Browser-Based Authentication (Easiest!)
+## Method 0: Interactive Token Setup (Easiest!)
+
+### Copy, Paste, Done!
+
+```bash
+# Download and run the interactive setup
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/interactive-git-setup.sh
+chmod +x interactive-git-setup.sh
+./interactive-git-setup.sh
+```
+
+This script will:
+1. Prompt you to paste your GitHub token (hidden input)
+2. Configure git credentials automatically
+3. Clone the repository
+4. Run the setup
+
+Perfect for terminals that support paste!
+
+## Method 1: Browser-Based Authentication
 
 ### Fully Automated with Browser
 
@@ -38,11 +57,28 @@ No manual token copying required!
 On your Proxmox host:
 
 ```bash
-# Method A: Pre-populate credentials (no prompts)
+# Method A: Interactive setup with token prompt
+cat << 'SCRIPT' > setup-git-auth.sh
+#!/bin/bash
+echo "GitHub PAT Authentication Setup"
+echo "=============================="
+echo ""
+echo "Please paste your GitHub Personal Access Token:"
+echo "(It will be hidden as you type/paste)"
+read -s TOKEN
+echo ""
+echo "Configuring git credentials..."
 git config --global credential.helper store
-echo "https://notdabob:YOUR_TOKEN@github.com" > ~/.git-credentials
+echo "https://notdabob:${TOKEN}@github.com" > ~/.git-credentials
 chmod 600 ~/.git-credentials
+echo "✅ Credentials configured!"
+echo ""
+echo "Cloning repository..."
 git clone https://github.com/notdabob/time-shift-proxmox.git
+SCRIPT
+
+chmod +x setup-git-auth.sh
+./setup-git-auth.sh
 
 # Method B: One-liner with token from file
 echo 'ghp_YourTokenHere' > ~/.time-shift-proxmox-token
