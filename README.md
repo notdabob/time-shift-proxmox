@@ -5,7 +5,11 @@ A Debian-based VM template for Proxmox that can temporarily shift system time to
 ## 🚀 Quick Start - One Command Setup
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh | bash
+# Method 1: Download and run (recommended)
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh && sudo bash setup.sh
+
+# Method 2: Using curl
+curl -fsSL https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh -o setup.sh && sudo bash setup.sh
 ```
 
 This single command will:
