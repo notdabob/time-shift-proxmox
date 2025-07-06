@@ -1,0 +1,41 @@
+name: proxmox-deploy
+version: 1.0.0
+description: Deploy and manage time-shift VMs on Proxmox VE
+type: deploy
+platforms:
+  - linux
+  - darwin
+requirements:
+  - proxmoxer>=1.3.1
+  - requests>=2.28.0
+  - urllib3>=1.26.0
+dependencies: []
+tags:
+  - virtualization
+  - proxmox
+  - vm
+  - deployment
+config_template:
+  proxmox_host: "192.168.1.100"
+  proxmox_user: "root@pam"
+  proxmox_password: ""
+  proxmox_node: "pve"
+  vm_name: "time-shift-vm"
+  vm_cores: 2
+  vm_memory: 2048
+  vm_disk_size: 20
+  verify_ssl: false
+commands:
+  deploy: "python bin/time-shift-cli.py deploy --config {config_file}"
+  validate: "python bin/time-shift-cli.py validate"
+  status: "python bin/time-shift-cli.py status"
+  destroy: "python bin/time-shift-cli.py destroy --vmid {vmid}"
+health_checks:
+  - check_proxmox_connection
+  - verify_vm_template
+pre_hooks:
+  - "echo 'Validating Proxmox connection...'"
+post_hooks:
+  - "echo 'VM deployment completed'"
+environment:
+  PYTHONPATH: "${PWD}/lib:${PYTHONPATH}"

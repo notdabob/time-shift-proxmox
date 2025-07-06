@@ -25,7 +25,7 @@ Create a specialized VM solution that can:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-repo/time-shift-proxmox.git
+   git clone https://github.com/notdabob/time-shift-proxmox.git
    cd time-shift-proxmox
    ```
 

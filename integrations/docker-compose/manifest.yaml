@@ -1,0 +1,38 @@
+name: docker-compose
+version: 1.0.0
+description: Docker Compose deployment and management
+type: deploy
+platforms:
+  - linux
+  - darwin
+requirements:
+  - docker
+  - docker-compose
+dependencies: []
+tags:
+  - containers
+  - docker
+  - deployment
+config_template:
+  compose_file: "docker-compose.yml"
+  project_name: "timeshift"
+  build_images: true
+  force_recreate: false
+commands:
+  default: "docker-compose up -d"
+  up: "docker-compose -f {compose_file} -p {project_name} up -d"
+  down: "docker-compose -f {compose_file} -p {project_name} down"
+  build: "docker-compose -f {compose_file} -p {project_name} build"
+  logs: "docker-compose -f {compose_file} -p {project_name} logs -f"
+  restart: "docker-compose -f {compose_file} -p {project_name} restart"
+  status: "docker-compose -f {compose_file} -p {project_name} ps"
+health_checks:
+  - check_docker_daemon
+  - verify_compose_file
+pre_hooks:
+  - "docker --version"
+  - "docker-compose --version"
+post_hooks:
+  - "docker-compose ps"
+environment:
+  COMPOSE_HTTP_TIMEOUT: "120"
