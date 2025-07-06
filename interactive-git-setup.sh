@@ -37,9 +37,21 @@ if [ -z "$TOKEN" ]; then
     echo "5. Click 'Generate token' and copy it"
     echo ""
     echo "Please paste your GitHub Personal Access Token:"
-    echo "(It will be hidden as you type/paste)"
-    read -s TOKEN
+    echo "(The token will be hidden as you type/paste)"
+    echo "Press Enter after pasting:"
+    
+    # Try different read methods for better compatibility
+    if [ -t 0 ]; then
+        # Terminal is interactive
+        read -s TOKEN
+    else
+        # Non-interactive, read from stdin
+        TOKEN=$(cat)
+    fi
     echo ""
+    
+    # Remove any whitespace/newlines
+    TOKEN=$(echo "$TOKEN" | tr -d '\n\r\t ')
 fi
 
 # Validate token format

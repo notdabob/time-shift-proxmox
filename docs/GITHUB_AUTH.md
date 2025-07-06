@@ -64,17 +64,54 @@ echo "GitHub PAT Authentication Setup"
 echo "=============================="
 echo ""
 echo "Please paste your GitHub Personal Access Token:"
-echo "(It will be hidden as you type/paste)"
+echo "(The token will be hidden as you type/paste)"
+echo "Press Enter after pasting:"
 read -s TOKEN
 echo ""
+
+# Check if token was provided
+if [ -z "$TOKEN" ]; then
+    echo "❌ No token provided!"
+    echo "Please run the script again and paste your token."
+    exit 1
+fi
+
+# Validate token length
+if [ ${#TOKEN} -lt 40 ]; then
+    echo "⚠️  Token seems too short. GitHub tokens are usually 40+ characters."
+    echo "Token length: ${#TOKEN} characters"
+fi
+
 echo "Configuring git credentials..."
 git config --global credential.helper store
 echo "https://notdabob:${TOKEN}@github.com" > ~/.git-credentials
 chmod 600 ~/.git-credentials
+
+# Also save token to file for debugging
+echo "$TOKEN" > ~/.time-shift-proxmox-token
+chmod 600 ~/.time-shift-proxmox-token
+
 echo "✅ Credentials configured!"
 echo ""
-echo "Cloning repository..."
-git clone https://github.com/notdabob/time-shift-proxmox.git
+
+# Test authentication first
+echo "Testing authentication..."
+if git ls-remote https://github.com/notdabob/time-shift-proxmox.git >/dev/null 2>&1; then
+    echo "✅ Authentication successful!"
+    echo ""
+    echo "Cloning repository..."
+    git clone https://github.com/notdabob/time-shift-proxmox.git
+else
+    echo "❌ Authentication failed!"
+    echo ""
+    echo "Please check:"
+    echo "1. Your token has 'repo' scope"
+    echo "2. The token is valid and not expired"
+    echo "3. You pasted the complete token"
+    echo ""
+    echo "Get a new token from: https://github.com/settings/tokens"
+    exit 1
+fi
 SCRIPT
 
 chmod +x setup-git-auth.sh
