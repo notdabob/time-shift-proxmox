@@ -2,6 +2,21 @@
 
 A Debian-based VM template for Proxmox that can temporarily shift system time to access iDRAC interfaces with expired SSL certificates.
 
+## 🚀 Quick Start - One Command Setup
+
+```bash
+curl -sSL https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh | bash
+```
+
+This single command will:
+
+- Clone the repository
+- Install all dependencies
+- Configure Dell iDRAC defaults (root/calvin)
+- Set up the VM environment
+- Make all scripts executable
+- Run initial configuration wizard
+
 ## Project Goal
 
 Create a specialized VM solution that can:
@@ -20,29 +35,31 @@ Create a specialized VM solution that can:
 - **Logging**: Detailed operation logging for troubleshooting
 - **Backup/Restore**: Automatic backup and restoration of original time settings
 
-## Installation
+## Manual Installation
 
-1. Clone the repository:
+If you prefer to install manually:
 
-   ```bash
-   git clone https://github.com/notdabob/time-shift-proxmox.git
-   cd time-shift-proxmox
-   ```
-
-2. Setup project requirements and make scripts executable:
-
-   ```bash
-   chmod +x bin/*.py && ./bin/setup-project-requirements.py
-   ```
+```bash
+# Clone and setup in one command
+git clone https://github.com/notdabob/time-shift-proxmox.git && \
+cd time-shift-proxmox && \
+chmod +x bin/*.py && \
+./bin/setup-project-requirements.py && \
+./bin/vm-config-wizard.py
+```
 
 ## Usage
 
-After installation, you can use the following scripts:
+After installation, everything is ready to use:
 
-- **Configuration Wizard**: `./bin/vm-config-wizard.py`
-- **Time-Shift CLI**: `./bin/time-shift-cli.py`
+- **Access iDRAC with expired certificates**:
 
-Refer to the respective script's `--help` for usage details.
+  ```bash
+  ./time-shift-idrac.sh <idrac-ip>
+  ```
+
+- **Advanced Time-Shift CLI**: `./bin/time-shift-cli.py`
+- **Reconfigure**: `./bin/vm-config-wizard.py`
 
 ## Configuration
 
@@ -91,3 +108,11 @@ Contributions are welcome! Please ensure all changes include appropriate tests a
 ## Support
 
 For issues and questions, please review the troubleshooting section and check the log files for detailed error information.
+
+## One-Click Tools Summary
+
+- **Quick Setup**: `curl -sSL https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh | bash`
+- **Access iDRAC**: `./time-shift-idrac.sh <idrac-ip>`
+- **Manual Setup**: `git clone ... && cd ... && ./setup.sh`
+
+All operations are designed to be single-command executions with no additional configuration required.
