@@ -4,14 +4,26 @@ A Debian-based VM template for Proxmox that can temporarily shift system time to
 
 ## 🚀 Quick Start - One Command Setup
 
-### Easiest: Browser-Based Authentication (Recommended)
+### Easiest: PAT File Method (Recommended)
+
+```bash
+# Step 1: Create a .pat file with your token
+echo 'ghp_YourGitHubTokenHere' > .pat
+
+# Step 2: Run the setup (it will find your .pat file automatically)
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh && sudo bash setup.sh
+```
+
+That's it! The setup script automatically looks for `.pat` files in the current directory or your home directory.
+
+### Alternative: Browser-Based Authentication
 
 ```bash
 # This opens your browser for GitHub login - no token copying needed!
 wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/browser-auth.sh && chmod +x browser-auth.sh && ./browser-auth.sh
 ```
 
-### For Private Repository (with GitHub Token) - No Password Prompts!
+### For Private Repository (with GitHub Token) - Multiple Options
 
 ```bash
 # Option 1: Save token and auto-configure git (easiest)

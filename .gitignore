@@ -1,3 +1,10 @@
+# GitHub Personal Access Token files
+.pat
+*.pat
+.github-token
+.github-pat
+~/.time-shift-proxmox-token
+
 # Python
 __pycache__/
 *.py[cod]

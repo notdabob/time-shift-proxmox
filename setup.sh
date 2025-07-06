@@ -21,20 +21,57 @@ echo "📁 Installing to: $INSTALL_DIR"
 
 # Handle repository cloning with authentication
 clone_repository() {
-    # Check if we have a saved token
-    if [ -f "$HOME/.time-shift-proxmox-token" ]; then
+    # Check for token in multiple locations
+    TOKEN=""
+    
+    # 1. Check .pat file in current directory
+    if [ -f ".pat" ] && [ -z "$TOKEN" ]; then
+        TOKEN=$(grep -v '^#' .pat | grep -v '^YOUR_GITHUB_TOKEN_HERE$' | head -n1)
+        if [ ! -z "$TOKEN" ]; then
+            echo "✓ Using token from .pat file"
+        fi
+    fi
+    
+    # 2. Check ~/.pat file
+    if [ -f "$HOME/.pat" ] && [ -z "$TOKEN" ]; then
+        TOKEN=$(grep -v '^#' "$HOME/.pat" | grep -v '^YOUR_GITHUB_TOKEN_HERE$' | head -n1)
+        if [ ! -z "$TOKEN" ]; then
+            echo "✓ Using token from ~/.pat file"
+        fi
+    fi
+    
+    # 3. Check legacy token file
+    if [ -f "$HOME/.time-shift-proxmox-token" ] && [ -z "$TOKEN" ]; then
         TOKEN=$(cat "$HOME/.time-shift-proxmox-token")
+        if [ ! -z "$TOKEN" ]; then
+            echo "✓ Using token from ~/.time-shift-proxmox-token"
+        fi
+    fi
+    
+    # 4. Check environment variable
+    if [ ! -z "$GITHUB_TOKEN" ] && [ -z "$TOKEN" ]; then
+        TOKEN="$GITHUB_TOKEN"
+        echo "✓ Using token from GITHUB_TOKEN environment variable"
+    fi
+    
+    if [ ! -z "$TOKEN" ]; then
+        # Configure git credentials
+        git config --global credential.helper store
+        echo "https://notdabob:${TOKEN}@github.com" > ~/.git-credentials
+        chmod 600 ~/.git-credentials
+        
         git clone https://notdabob:${TOKEN}@github.com/notdabob/time-shift-proxmox.git "$INSTALL_DIR" 2>/dev/null
     else
         # Try public clone first
         git clone https://github.com/notdabob/time-shift-proxmox.git "$INSTALL_DIR" 2>/dev/null || {
             echo "⚠️  Repository appears to be private. Please provide authentication."
             echo ""
-            echo "Run one of these commands first:"
-            echo "1. wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup-github-token.sh && bash setup-github-token.sh"
-            echo "2. echo 'YOUR_GITHUB_TOKEN' > ~/.time-shift-proxmox-token && chmod 600 ~/.time-shift-proxmox-token"
+            echo "Easy method: Create a .pat file:"
+            echo "1. echo 'YOUR_GITHUB_TOKEN' > .pat"
+            echo "2. Run this setup again"
             echo ""
-            echo "Then run this setup again."
+            echo "Get a token from: https://github.com/settings/tokens"
+            echo "(Select 'repo' scope when creating the token)"
             exit 1
         }
     fi

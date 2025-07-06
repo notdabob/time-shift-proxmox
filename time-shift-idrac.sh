@@ -30,6 +30,22 @@ fi
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
+# Check for authentication if needed for private repo updates
+if [ -f ".pat" ] || [ -f "$HOME/.pat" ]; then
+    # Load token for potential git operations
+    if [ -f ".pat" ]; then
+        TOKEN=$(grep -v '^#' .pat | grep -v '^YOUR_GITHUB_TOKEN_HERE$' | head -n1)
+    elif [ -f "$HOME/.pat" ]; then
+        TOKEN=$(grep -v '^#' "$HOME/.pat" | grep -v '^YOUR_GITHUB_TOKEN_HERE$' | head -n1)
+    fi
+    
+    if [ ! -z "$TOKEN" ]; then
+        git config --global credential.helper store
+        echo "https://notdabob:${TOKEN}@github.com" > ~/.git-credentials
+        chmod 600 ~/.git-credentials
+    fi
+fi
+
 # Check if virtual environment exists
 if [ ! -d "venv" ]; then
     echo "⚠️  Virtual environment not found. Running setup first..."
