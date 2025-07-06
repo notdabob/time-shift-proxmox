@@ -4,14 +4,25 @@ A Debian-based VM template for Proxmox that can temporarily shift system time to
 
 ## 🚀 Quick Start - One Command Setup
 
-### For Private Repository (with GitHub Token)
+### Easiest: Browser-Based Authentication (Recommended)
 
 ```bash
-# Save your token once (get it from https://github.com/settings/tokens)
-echo 'YOUR_GITHUB_TOKEN' > ~/.time-shift-proxmox-token && chmod 600 ~/.time-shift-proxmox-token
+# This opens your browser for GitHub login - no token copying needed!
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/browser-auth.sh && chmod +x browser-auth.sh && ./browser-auth.sh
+```
 
-# Then run setup
-wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/setup.sh && sudo bash setup.sh
+### For Private Repository (with GitHub Token) - No Password Prompts!
+
+```bash
+# Option 1: Save token and auto-configure git (easiest)
+echo 'ghp_YourActualToken' > ~/.time-shift-proxmox-token && chmod 600 ~/.time-shift-proxmox-token
+git config --global credential.helper store
+echo "https://notdabob:$(cat ~/.time-shift-proxmox-token)@github.com" > ~/.git-credentials
+git clone https://github.com/notdabob/time-shift-proxmox.git && cd time-shift-proxmox && sudo ./setup.sh
+
+# Option 2: One-liner with token parameter
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/git-clone-easy.sh
+chmod +x git-clone-easy.sh && ./git-clone-easy.sh ghp_YourActualToken
 ```
 
 ### Alternative: Pass Token Directly

@@ -1,9 +1,31 @@
 # GitHub Authentication Setup for Private Repository
 
-## Method 1: Personal Access Token (Recommended)
+## Method 0: Browser-Based Authentication (Easiest!)
+
+### Fully Automated with Browser
+
+```bash
+# Download and run the browser auth script
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/browser-auth.sh
+chmod +x browser-auth.sh
+./browser-auth.sh
+```
+
+This will:
+1. Install GitHub CLI if needed
+2. Open your browser for authentication
+3. Automatically capture the token
+4. Configure git credentials
+5. Clone the repository
+6. Run the setup
+
+No manual token copying required!
+
+## Method 1: Personal Access Token (Manual)
 
 ### Step 1: Create a Personal Access Token on GitHub
-1. Go to https://github.com/settings/tokens
+
+1. Go to <https://github.com/settings/tokens>
 2. Click "Generate new token" → "Generate new token (classic)"
 3. Give it a name like "time-shift-proxmox-access"
 4. Select scopes:
@@ -11,25 +33,32 @@
 5. Click "Generate token"
 6. **Copy the token immediately** (you won't see it again!)
 
-### Step 2: Configure Git to Use the Token
+### Step 2: Configure Git to Use the Token (No Password Prompts!)
 
 On your Proxmox host:
 
 ```bash
-# Method A: Store credentials permanently (less secure but convenient)
+# Method A: Pre-populate credentials (no prompts)
 git config --global credential.helper store
+echo "https://notdabob:YOUR_TOKEN@github.com" > ~/.git-credentials
+chmod 600 ~/.git-credentials
 git clone https://github.com/notdabob/time-shift-proxmox.git
-# When prompted:
-# Username: notdabob
-# Password: <paste-your-personal-access-token>
 
-# Method B: Cache credentials temporarily (more secure)
-git config --global credential.helper 'cache --timeout=3600'  # Cache for 1 hour
+# Method B: One-liner with token from file
+echo 'ghp_YourTokenHere' > ~/.time-shift-proxmox-token
+chmod 600 ~/.time-shift-proxmox-token
+git config --global credential.helper store
+echo "https://notdabob:$(cat ~/.time-shift-proxmox-token)@github.com" > ~/.git-credentials
 git clone https://github.com/notdabob/time-shift-proxmox.git
-# Enter username and token as above
+
+# Method C: Use our helper script
+wget https://raw.githubusercontent.com/notdabob/time-shift-proxmox/main/git-clone-easy.sh
+chmod +x git-clone-easy.sh
+./git-clone-easy.sh ghp_YourTokenHere
 ```
 
 ### Step 3: Clone Using Token in URL (One-liner)
+
 ```bash
 # Replace YOUR_TOKEN with your actual token
 git clone https://notdabob:YOUR_TOKEN@github.com/notdabob/time-shift-proxmox.git
@@ -38,6 +67,7 @@ git clone https://notdabob:YOUR_TOKEN@github.com/notdabob/time-shift-proxmox.git
 ## Method 2: SSH Key Authentication (Most Secure)
 
 ### Step 1: Generate SSH Key on Proxmox Host
+
 ```bash
 # Generate SSH key (if you don't have one)
 ssh-keygen -t ed25519 -C "your-email@example.com"
@@ -49,13 +79,15 @@ cat ~/.ssh/id_ed25519.pub
 ```
 
 ### Step 2: Add SSH Key to GitHub
-1. Go to https://github.com/settings/keys
+
+1. Go to <https://github.com/settings/keys>
 2. Click "New SSH key"
 3. Title: "Proxmox Host - time-shift"
 4. Key: Paste the output from `cat ~/.ssh/id_ed25519.pub`
 5. Click "Add SSH key"
 
 ### Step 3: Clone Using SSH
+
 ```bash
 # Test SSH connection
 ssh -T git@github.com
@@ -67,6 +99,7 @@ git clone git@github.com:notdabob/time-shift-proxmox.git
 ## Method 3: GitHub CLI (Easiest)
 
 ### Install and Authenticate
+
 ```bash
 # Install GitHub CLI
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
@@ -161,6 +194,7 @@ fi
 ## Troubleshooting
 
 If authentication fails:
+
 1. Verify your username is correct
 2. Ensure you're using the token, not your GitHub password
 3. Check token permissions include 'repo' scope
