@@ -110,6 +110,19 @@ Project-specific configurations are in `etc/project_config.json`.
 - Root access for time manipulation
 - Network connectivity to target iDRAC interfaces
 
+### Installation Options
+
+```bash
+# Core installation (recommended)
+pip install -r requirements-core.txt
+
+# Development installation (includes testing tools)
+pip install -r requirements-dev.txt
+
+# Optional AI features (only if needed)
+pip install -r requirements-optional.txt
+```
+
 ## Security Considerations
 
 - This tool requires root privileges to modify system time.

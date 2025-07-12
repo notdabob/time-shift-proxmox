@@ -1,0 +1,12 @@
+# Optional dependencies for advanced features
+
+# AI Provider SDKs (only needed for AI integration features)
+# Install with: pip install -r requirements-optional.txt
+google-generativeai>=0.3.0
+anthropic>=0.7.0
+openai>=1.0.0
+groq>=0.4.0
+
+# Web interface (only needed for web UI)
+fastapi>=0.100.0
+uvicorn>=0.23.0

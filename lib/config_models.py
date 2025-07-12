@@ -173,7 +173,7 @@ class TimeConfig(BaseModel):
 
 
 class IDRACConfig(BaseModel):
-    """iDRAC connection configuration
+        """iDRAC connection configuration
     
     Dell iDRAC standard default credentials:
     - Username: root
@@ -181,9 +181,9 @@ class IDRACConfig(BaseModel):
     
     These are Dell's factory defaults for all iDRAC interfaces.
     """
-    default_username: str = Field(default="root", description="Default iDRAC username (Dell standard)")
-    default_password: str = Field(default="calvin", description="Default iDRAC password (Dell standard)")
-    ssl_verify: bool = Field(default=False, description="Verify SSL certificates")
+    default_username: str = Field(default="", description="iDRAC username")
+    default_password: str = Field(default="", description="iDRAC password")
+    ssl_verify: bool = Field(default=True, description="Verify SSL certificates")
     timeout: int = Field(default=30, ge=5, le=120, description="Connection timeout")
     retry_attempts: int = Field(default=3, ge=1, le=10, description="Retry attempts")
     retry_delay: int = Field(default=5, ge=1, le=60, description="Delay between retries in seconds")
@@ -238,6 +238,7 @@ class SecurityConfig(BaseModel):
     """Security configuration"""
     encrypt_passwords: bool = Field(default=True, description="Encrypt stored passwords")
     allow_root: bool = Field(default=False, description="Allow root user operations")
+    accept_dell_defaults: bool = Field(default=True, description="Accept Dell default credentials (security risk)")
     require_confirmation: bool = Field(default=True, description="Require operation confirmation")
     api_key_length: int = Field(default=32, ge=16, le=128, description="API key length")
     session_timeout: int = Field(default=3600, ge=300, le=86400, description="Session timeout in seconds")
@@ -311,6 +312,7 @@ class TimeShiftConfig(BaseModel):
                 },
                 "idrac": {
                     "default_username": "root",
+                    "default_password": "calvin",
                     "ssl_verify": False
                 },
                 "logging": {
@@ -417,8 +419,11 @@ def validate_config_security(config: TimeShiftConfig) -> List[str]:
     if config.proxmox.password in ['password', 'admin', 'change_me']:
         warnings.append("Proxmox password appears to be weak or default")
     
-    if config.idrac.default_password == 'calvin':
-        warnings.append("Using default iDRAC password")
+    if config.idrac.default_password:
+        if config.idrac.default_password == 'calvin' or config.idrac.default_username == 'root':
+            warnings.append("Using default Dell iDRAC credentials (root/calvin) - SECURITY RISK")
+        elif len(config.idrac.default_password) < 8:
+            warnings.append("iDRAC password is too short (minimum 8 characters)")
     
     # Check SSL settings
     if not config.proxmox.verify_ssl:

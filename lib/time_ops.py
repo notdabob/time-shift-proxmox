@@ -8,7 +8,6 @@ import subprocess
 import logging
 from datetime import datetime, timedelta
 import json
-import shutil
 
 class TimeOperations:
     """Handles system time manipulation operations"""

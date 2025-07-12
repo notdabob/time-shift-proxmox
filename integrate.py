@@ -223,7 +223,7 @@ class IntegrationFramework:
         return True
     
     async def _execute_command(self, cmd: str, env: Dict[str, str]) -> bool:
-        """Execute a shell command"""
+        """Execute a shell command with validation"""
         console.print(f"🔧 Executing: {cmd}")
         
         # Merge environment variables
@@ -231,8 +231,12 @@ class IntegrationFramework:
         cmd_env.update(env)
         
         try:
-            process = await asyncio.create_subprocess_shell(
-                cmd,
+            # Use shlex to safely parse command
+            import shlex
+            cmd_parts = shlex.split(cmd)
+            
+            process = await asyncio.create_subprocess_exec(
+                *cmd_parts,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
                 env=cmd_env

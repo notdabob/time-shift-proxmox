@@ -61,16 +61,25 @@ var/logs/*.log
 *.tmp
 *.temp
 *.bak
+*.backup
+*.old
 tmp/
+*.pid
+*.seed
+*.pid.lock
 
 # Config files with sensitive data (if any)
 # etc/time-shift-config.json  # Uncomment if contains sensitive data
 
 # Test coverage
 .coverage
+.coverage.*
+coverage.xml
+*.cover
 htmlcov/
 .pytest_cache/
 .tox/
+.hypothesis/
 
 # Security and quality reports
 /tmp/bandit-report.json
@@ -79,8 +88,20 @@ htmlcov/
 # Example configs (generated during setup)
 example_config.json
 
-# Poetry
+# Integration cache
+.integration_cache/
+
+# Local overrides
+*.local.json
+settings.local.json
+
+# But track important config files
+!etc/time-shift-config.json
+!etc/project_config.json
+
+# Package managers
 poetry.lock
+Pipfile.lock
 
 # MyPy
 .mypy_cache/

@@ -6,7 +6,6 @@ Time Shift Proxmox Master CLI - Unified command interface for all operations
 import click
 import asyncio
 import json
-import yaml
 import sys
 import os
 from pathlib import Path

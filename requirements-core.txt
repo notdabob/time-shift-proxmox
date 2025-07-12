@@ -1,0 +1,22 @@
+# Core dependencies only (no AI SDKs)
+requests>=2.28.0
+urllib3>=1.26.0
+python-dotenv>=1.0.0
+
+# Security dependencies
+cryptography>=41.0.0
+keyring>=24.0.0
+
+# CLI and validation
+click>=8.1.0
+pydantic>=2.0.0
+
+# Async support
+aiohttp>=3.8.0
+
+# Monitoring and logging
+structlog>=23.0.0
+
+# Rich for better CLI output
+rich>=13.0.0
+PyYAML>=6.0

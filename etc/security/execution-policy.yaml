@@ -1,0 +1,191 @@
+# Time-Shift Proxmox Security Execution Policy
+# This file defines broader security policies for the entire system
+
+version: "1.0.0"
+last_updated: "2024-01-12"
+description: |
+  Security policies for time-shift-proxmox execution environment.
+  These policies work in conjunction with command-permissions.json
+  to provide comprehensive security controls.
+
+# Authentication policies
+authentication:
+  require_authentication: true
+  session_timeout: 3600  # seconds
+  max_login_attempts: 3
+  lockout_duration: 300  # seconds
+  
+  # Token policies
+  token_policies:
+    github:
+      min_length: 40
+      allowed_prefixes: ["ghp_", "github_pat_", "ghs_", "ghr_"]
+      storage_method: "keyring"  # keyring, encrypted_file, or environment
+      rotation_reminder_days: 90
+    
+    proxmox:
+      session_duration: 7200  # 2 hours
+      auto_refresh: true
+      secure_storage: true
+
+# Network policies
+network:
+  # SSL/TLS settings
+  ssl_verification:
+    default: false  # Required for expired certificates
+    exceptions:
+      - host: "github.com"
+        verify: true
+      - host: "*.proxmox.local"
+        verify: false
+  
+  # Connection policies
+  connection_policies:
+    timeout_seconds: 30
+    retry_attempts: 3
+    retry_delay: 5
+    connection_pool_size: 10
+    
+  # Allowed endpoints
+  allowed_endpoints:
+    proxmox:
+      - pattern: "https://*.*.*.*/api2/json"
+        methods: ["GET", "POST", "PUT", "DELETE"]
+    idrac:
+      - pattern: "https://*.*.*.*/redfish/v1"
+        methods: ["GET", "POST"]
+    github:
+      - pattern: "https://api.github.com/*"
+        methods: ["GET", "POST"]
+
+# File system policies
+filesystem:
+  # Restricted paths
+  restricted_paths:
+    read_only:
+      - "/etc/passwd"
+      - "/etc/shadow"
+      - "/etc/sudoers"
+    forbidden:
+      - "/dev/*"
+      - "/proc/*/mem"
+      - "/sys/firmware/*"
+  
+  # Temporary file policies
+  temp_files:
+    location: "/tmp/time-shift"
+    auto_cleanup: true
+    max_age_hours: 24
+    max_size_mb: 100
+
+# Process execution policies
+process_execution:
+  # User context
+  allow_root: false
+  preferred_user: "time-shift"
+  
+  # Resource limits
+  resource_limits:
+    max_cpu_percent: 80
+    max_memory_mb: 2048
+    max_open_files: 1024
+    max_processes: 50
+  
+  # Sandbox policies
+  sandboxing:
+    enable: true
+    allowed_syscalls: ["read", "write", "open", "close", "stat", "fstat"]
+    denied_syscalls: ["mount", "umount", "chroot", "pivot_root"]
+
+# Logging and auditing
+logging:
+  # Audit logging
+  audit:
+    enabled: true
+    log_path: "/var/log/time-shift/audit.log"
+    rotation: "daily"
+    retention_days: 90
+    
+    # Events to log
+    log_events:
+      - authentication_attempts
+      - command_execution
+      - file_access
+      - network_connections
+      - configuration_changes
+      - security_violations
+  
+  # Security monitoring
+  monitoring:
+    alert_on_suspicious_activity: true
+    suspicious_patterns:
+      - multiple_failed_logins
+      - forbidden_command_attempts
+      - unusual_network_activity
+      - privilege_escalation_attempts
+
+# Secrets management
+secrets:
+  # Encryption settings
+  encryption:
+    algorithm: "AES-256-GCM"
+    key_derivation: "PBKDF2"
+    iterations: 100000
+    
+  # Secret storage
+  storage:
+    default_method: "keyring"
+    fallback_method: "encrypted_file"
+    
+  # Secret rotation
+  rotation_policies:
+    passwords:
+      max_age_days: 90
+      complexity_requirements:
+        min_length: 12
+        require_uppercase: true
+        require_lowercase: true
+        require_numbers: true
+        require_special: true
+    
+    api_keys:
+      max_age_days: 365
+      auto_rotate: false
+
+# Compliance and standards
+compliance:
+  standards:
+    - "NIST 800-53"
+    - "CIS Controls"
+    - "OWASP Top 10"
+  
+  security_checks:
+    pre_deployment:
+      - dependency_vulnerability_scan
+      - static_code_analysis
+      - secrets_scan
+    
+    runtime:
+      - integrity_monitoring
+      - anomaly_detection
+      - access_control_verification
+
+# Emergency procedures
+emergency:
+  # Kill switch
+  kill_switch:
+    enabled: true
+    trigger_file: "/tmp/time-shift.kill"
+    
+  # Rollback procedures
+  rollback:
+    auto_backup: true
+    max_backups: 5
+    rollback_on_error: true
+  
+  # Security breach response
+  breach_response:
+    auto_lockdown: true
+    notify_admin: true
+    preserve_evidence: true
+    isolation_mode: true

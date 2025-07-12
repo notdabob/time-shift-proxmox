@@ -13,7 +13,12 @@
       "Bash(git push:*)",
       "Bash(gh release create:*)",
       "Bash(gh api:*)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "Bash(mv:*)",
+      "Bash(ln:*)",
+      "Bash(rm:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

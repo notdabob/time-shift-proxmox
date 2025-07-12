@@ -141,13 +141,16 @@ class ConfigEncryption:
         self._key = None
         
         if password:
-            self._key = self._derive_key(password.encode())
-        elif not Fernet:
+            self._key, self._salt = self._derive_key(password.encode())
+        else:
+            self._salt = None
+        if not Fernet:
             raise SecurityError("Cryptography package required for encryption")
     
-    def _derive_key(self, password: bytes) -> bytes:
-        """Derive encryption key from password"""
-        salt = b'time-shift-salt'  # In production, use random salt and store it
+    def _derive_key(self, password: bytes, salt: Optional[bytes] = None) -> tuple[bytes, bytes]:
+        """Derive encryption key from password with random salt"""
+        if salt is None:
+            salt = os.urandom(16)  # Generate random 16-byte salt
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
@@ -155,7 +158,7 @@ class ConfigEncryption:
             iterations=100000,
         )
         key = base64.urlsafe_b64encode(kdf.derive(password))
-        return key
+        return key, salt
     
     def generate_key(self) -> str:
         """Generate a new encryption key"""
@@ -177,9 +180,10 @@ class ConfigEncryption:
             raise SecurityError("Cryptography package not available")
         
         if password:
-            key = self._derive_key(password.encode())
+            key, salt = self._derive_key(password.encode())
         elif self._key:
             key = self._key
+            salt = self._salt
         else:
             raise SecurityError("No encryption key available")
         
@@ -189,7 +193,14 @@ class ConfigEncryption:
             data = json.dumps(data)
         
         encrypted_data = cipher_suite.encrypt(data.encode())
-        return base64.urlsafe_b64encode(encrypted_data).decode()
+        
+        # Prepend salt to encrypted data for later decryption
+        if salt:
+            combined_data = salt + encrypted_data
+        else:
+            combined_data = encrypted_data
+            
+        return base64.urlsafe_b64encode(combined_data).decode()
     
     def decrypt_data(self, encrypted_data: str, password: Optional[str] = None) -> Union[str, Dict[str, Any]]:
         """
@@ -205,18 +216,26 @@ class ConfigEncryption:
         if not Fernet:
             raise SecurityError("Cryptography package not available")
         
-        if password:
-            key = self._derive_key(password.encode())
-        elif self._key:
-            key = self._key
-        else:
-            raise SecurityError("No encryption key available")
-        
-        cipher_suite = Fernet(key)
-        
         try:
             decoded_data = base64.urlsafe_b64decode(encrypted_data.encode())
-            decrypted_data = cipher_suite.decrypt(decoded_data)
+            
+            # Extract salt and encrypted data
+            if password or (self._key and hasattr(self, '_salt') and self._salt):
+                salt = decoded_data[:16]  # First 16 bytes are salt
+                actual_encrypted_data = decoded_data[16:]
+            else:
+                salt = None
+                actual_encrypted_data = decoded_data
+            
+            if password:
+                key, _ = self._derive_key(password.encode(), salt)
+            elif self._key:
+                key = self._key
+            else:
+                raise SecurityError("No encryption key available")
+            
+            cipher_suite = Fernet(key)
+            decrypted_data = cipher_suite.decrypt(actual_encrypted_data)
             
             # Try to parse as JSON, return string if it fails
             try:

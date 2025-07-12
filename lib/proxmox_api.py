@@ -4,7 +4,6 @@ Handles all interactions with the Proxmox Virtual Environment API
 """
 
 import requests
-import json
 import urllib3
 from datetime import datetime
 import logging

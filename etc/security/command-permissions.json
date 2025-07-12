@@ -1,0 +1,175 @@
+{
+  "_description": "Security policy for command execution validation. Used by safe-commands.sh and other scripts to validate operations before execution.",
+  "_version": "1.0.0",
+  "_last_updated": "2024-01-12",
+  "_usage": {
+    "purpose": "Define which commands can be auto-approved, require confirmation, or are forbidden",
+    "used_by": ["scripts/safe-commands-enhanced.sh", "master.py", "integration framework"],
+    "format": {
+      "approved_commands": "Commands that can be executed with optional restrictions",
+      "auto_approve": "Whether the command can run without user confirmation",
+      "require_confirmation": "Force user confirmation even if auto_approve is false",
+      "allowed_subcommands": "Whitelist of allowed subcommands (e.g., git status)",
+      "allowed_flags": "Whitelist of allowed command flags",
+      "allowed_patterns": "Regex patterns for allowed command variations",
+      "forbidden_commands": "Commands that should never be executed"
+    }
+  },
+  "approved_commands": {
+    "git": {
+      "allowed_subcommands": [
+        "status",
+        "add",
+        "commit",
+        "push",
+        "pull",
+        "log",
+        "diff",
+        "branch",
+        "checkout",
+        "clone",
+        "fetch",
+        "merge",
+        "rebase",
+        "stash"
+      ],
+      "auto_approve": true,
+      "description": "Version control operations"
+    },
+    "ls": {
+      "allowed_flags": ["-la", "-l", "-a", "-h", "-R", ""],
+      "auto_approve": true,
+      "description": "Directory listing"
+    },
+    "cd": {
+      "auto_approve": true,
+      "description": "Change directory"
+    },
+    "pwd": {
+      "auto_approve": true,
+      "description": "Print working directory"
+    },
+    "cat": {
+      "auto_approve": true,
+      "max_file_size": "10MB",
+      "description": "Display file contents"
+    },
+    "grep": {
+      "allowed_flags": ["-r", "-i", "-n", "-v", "-E", "-F"],
+      "auto_approve": true,
+      "description": "Search file contents"
+    },
+    "find": {
+      "allowed_flags": ["-name", "-type", "-size", "-mtime"],
+      "auto_approve": true,
+      "description": "Find files and directories"
+    },
+    "chmod": {
+      "allowed_patterns": ["\\+x .*", "755 .*", "644 .*", "600 .*"],
+      "auto_approve": true,
+      "description": "Change file permissions"
+    },
+    "mkdir": {
+      "allowed_flags": ["-p"],
+      "auto_approve": true,
+      "description": "Create directories"
+    },
+    "cp": {
+      "allowed_flags": ["-r", "-p", "-v"],
+      "auto_approve": true,
+      "require_confirmation": true,
+      "description": "Copy files"
+    },
+    "mv": {
+      "auto_approve": false,
+      "require_confirmation": true,
+      "description": "Move/rename files"
+    },
+    "rm": {
+      "allowed_flags": ["-f", "-v"],
+      "forbidden_flags": ["-rf", "-fr"],
+      "auto_approve": false,
+      "require_confirmation": true,
+      "description": "Remove files (directories forbidden)"
+    },
+    "pip": {
+      "allowed_subcommands": ["install", "list", "show", "freeze"],
+      "forbidden_flags": ["--force-reinstall", "--ignore-installed"],
+      "auto_approve": false,
+      "require_confirmation": true,
+      "description": "Python package management"
+    },
+    "python": {
+      "allowed_flags": ["--version", "-V", "-m"],
+      "auto_approve": true,
+      "description": "Python interpreter"
+    },
+    "python3": {
+      "allowed_flags": ["--version", "-V", "-m"],
+      "auto_approve": true,
+      "description": "Python 3 interpreter"
+    },
+    "pytest": {
+      "auto_approve": true,
+      "description": "Run Python tests"
+    },
+    "docker": {
+      "allowed_subcommands": ["ps", "images", "logs", "inspect"],
+      "forbidden_subcommands": ["rm", "rmi", "system prune"],
+      "auto_approve": false,
+      "require_confirmation": true,
+      "description": "Docker container management"
+    },
+    "systemctl": {
+      "allowed_subcommands": ["status", "list-units"],
+      "forbidden_subcommands": ["stop", "disable", "mask"],
+      "auto_approve": false,
+      "require_confirmation": true,
+      "description": "System service management"
+    },
+    "curl": {
+      "allowed_flags": ["-s", "-S", "-L", "-o", "-O"],
+      "auto_approve": true,
+      "description": "HTTP client"
+    },
+    "wget": {
+      "allowed_flags": ["-q", "-O", "-P"],
+      "auto_approve": true,
+      "description": "File downloader"
+    }
+  },
+  "forbidden_commands": [
+    "rm -rf",
+    "rm -fr",
+    "sudo",
+    "su",
+    "dd",
+    "mkfs",
+    "fdisk",
+    "parted",
+    "format",
+    "del /f",
+    "deltree",
+    "kill -9",
+    "killall",
+    "shutdown",
+    "reboot",
+    "poweroff",
+    "init 0",
+    "init 6",
+    "> /dev/null",
+    "> /dev/zero",
+    "> /dev/random",
+    ":(){ :|:& };:",
+    "fork bomb",
+    "eval",
+    "exec"
+  ],
+  "security_rules": {
+    "max_command_length": 1000,
+    "forbidden_characters": ["`;", "&&", "||", "|", ">", "<", "$()"],
+    "require_absolute_paths": false,
+    "log_all_commands": true,
+    "audit_log_path": "/var/log/time-shift/command-audit.log"
+  }
+}
