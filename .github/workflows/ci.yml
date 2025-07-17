@@ -156,7 +156,7 @@ jobs:
         continue-on-error: true
         
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: semgrep.sarif
@@ -196,7 +196,7 @@ jobs:
           output: 'docker-security.sarif'
           
       - name: Upload Docker security scan
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: docker-security.sarif
