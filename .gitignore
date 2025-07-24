@@ -69,7 +69,7 @@ tmp/
 *.pid.lock
 
 # Documentation archive (old/deprecated files)
-docs/archive/
+# docs/archive/
 scripts/README-old.md
 
 # Config files with sensitive data (if any)
