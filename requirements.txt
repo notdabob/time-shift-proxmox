@@ -1,3 +1,6 @@
+# Time-Shift Proxmox - Core Dependencies
+# For core functionality only. See other requirements-*.txt files for optional features.
+
 # Core dependencies
 requests>=2.28.0
 urllib3>=1.26.0
@@ -13,23 +16,20 @@ pydantic>=2.0.0
 
 # Async support
 aiohttp>=3.8.0
-asyncio>=3.4.0
 
-# AI provider SDKs
-google-generativeai>=0.3.0
-anthropic>=0.7.0
-openai>=1.0.0
-groq>=0.4.0
+# System monitoring
+psutil>=5.9.0
 
-# Development and testing (optional)
-pytest>=7.4.0
-black>=23.0.0
-flake8>=6.0.0
-mypy>=1.5.0
+# Template engine
+jinja2>=3.1.0
 
 # Monitoring and logging
 structlog>=23.0.0
 
-# Web interface (optional)
-fastapi>=0.100.0
-uvicorn>=0.23.0
+# Rich for better CLI output
+rich>=13.0.0
+PyYAML>=6.0
+
+# For additional features, install:
+# - requirements-dev.txt (development tools)
+# - requirements-optional.txt (AI SDKs, web interface)
