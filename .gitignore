@@ -68,6 +68,10 @@ tmp/
 *.seed
 *.pid.lock
 
+# Documentation archive (old/deprecated files)
+docs/archive/
+scripts/README-old.md
+
 # Config files with sensitive data (if any)
 # etc/time-shift-config.json  # Uncomment if contains sensitive data
 

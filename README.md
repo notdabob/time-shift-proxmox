@@ -141,10 +141,11 @@ These are the universal defaults for all Dell iDRAC interfaces and are automatic
 
 ## Documentation
 
-- [`docs/PERPLEXITY_CONVERSATION.md`](docs/PERPLEXITY_CONVERSATION.md) - Original conversation source
-- [`GEMINI.md`](GEMINI.md) - Gemini AI integration details
-- [`.env`](.env) - Environment variables template
-- [`requirements.txt`](requirements.txt) - Python dependencies
+- [`docs/README.md`](docs/README.md) - Complete documentation index
+- [`docs/setup-guides/`](docs/setup-guides/) - Installation and setup guides
+- [`docs/INTEGRATION.md`](docs/INTEGRATION.md) - API integration and development
+- [`docs/SECURITY_IMPROVEMENTS.md`](docs/SECURITY_IMPROVEMENTS.md) - Security best practices
+- [`.github/copilot-instructions.md`](.github/copilot-instructions.md) - GitHub Copilot development guidelines
 
 ## License
 

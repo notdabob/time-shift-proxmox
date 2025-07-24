@@ -62,7 +62,7 @@ class ProxmoxConfig(BaseModel):
     
     class Config:
         """Pydantic configuration"""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "host": "192.168.1.100",
                 "port": 8006,
@@ -94,7 +94,7 @@ class VMConfig(BaseModel):
     
     class Config:
         """Pydantic configuration"""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "time-shift-vm",
                 "memory": 2048,
@@ -135,7 +135,7 @@ class NetworkConfig(BaseModel):
     
     class Config:
         """Pydantic configuration"""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "bridge": "vmbr0",
                 "ip_config": "dhcp",
@@ -161,7 +161,7 @@ class TimeConfig(BaseModel):
     
     class Config:
         """Pydantic configuration"""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "timezone": "UTC",
                 "ntp_servers": ["pool.ntp.org", "time.nist.gov"],
@@ -173,7 +173,7 @@ class TimeConfig(BaseModel):
 
 
 class IDRACConfig(BaseModel):
-        """iDRAC connection configuration
+    """iDRAC connection configuration
     
     Dell iDRAC standard default credentials:
     - Username: root
@@ -190,7 +190,7 @@ class IDRACConfig(BaseModel):
     
     class Config:
         """Pydantic configuration"""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "default_username": "root",
                 "default_password": "calvin",
@@ -222,7 +222,7 @@ class LoggingConfig(BaseModel):
     
     class Config:
         """Pydantic configuration"""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "level": "INFO",
                 "file": "/var/log/time-shift/time-shift.log",
@@ -248,7 +248,7 @@ class SecurityConfig(BaseModel):
     
     class Config:
         """Pydantic configuration"""
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "encrypt_passwords": True,
                 "allow_root": False,
@@ -285,7 +285,7 @@ class TimeShiftConfig(BaseModel):
             datetime: lambda v: v.isoformat(),
             IPvAnyAddress: str,
         }
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "proxmox": {
                     "host": "192.168.1.100",
@@ -394,7 +394,7 @@ def create_default_config() -> TimeShiftConfig:
             password="change_me",
             node="proxmox-node"
         ),
-        vm=VMConfig(),
+        vm=VMConfig(name="time-shift-vm"),
         network=NetworkConfig(),
         time=TimeConfig(),
         idrac=IDRACConfig(),
