@@ -18,7 +18,7 @@ jobs:
 
       - name: Run AI inference
         id: inference
-        uses: actions/ai-inference@v1
+        uses: actions/ai-inference@v2
         with:
           prompt: |
             Summarize the following GitHub issue concisely, accurately in a professional straight to the facts tone. Your summary should a length of ideally one paragraph and up to a maximum of 3 paragraphs while being exceptionally well formatted and user readable to precisely convey the summary of the issue to the end user:
